@@ -1,18 +1,12 @@
 Rails.application.routes.draw do
-  resource :user do
-    post '/user/sign_up', to: 'users#sign_up'
-    post '/user/sign_in', to: 'users#sign_in'
-  end
+  root 'home#index'
+  post '/auth/sign_up', to: 'auth#sign_up'
+  post '/auth/sign_in', to: 'auth#sign_in'
 
-  resource :task do
-    post '/task/create', to: 'tasks#create'
-    get '/task/result', to: 'tasks#result'
-  end
+  post '/task/create', to: 'tasks#create'
+  get '/task/result', to: 'tasks#result'
 
-  resource :stat do
-    get '/stats', to: 'stats#get'
-  end
-
+  get '/stats', to: 'stats#get'
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

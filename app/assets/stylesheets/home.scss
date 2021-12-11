@@ -1,0 +1,81 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+@font-face {
+  font-family: "Poly Rounded";
+  src: url("PollyRounded-Regular.otf");
+}
+
+@font-face {
+  font-family: "Poly Rounded";
+  src: url("PollyRounded-Bold.otf");
+  font-weight: bold;
+}
+
+.but1 {
+  background-color: #2E2F30;
+  border-radius: 12px;
+  text-align: center;
+
+  color: #ffffff;
+  font-family: "Calibri";
+  font-size: 20px;
+}
+
+.d1 {
+  text-align: right;
+  padding: 1%;
+}
+
+.d2 {
+  h1 {
+    text-align: center;
+    font-size: 100px;
+    font-family: "Poly Rounded";
+    font-weight: bold;
+  }
+
+  img {
+    width: 10%;
+    text-align: center;
+  }
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 15%;
+  padding-bottom: 5%;
+}
+
+.annotation {
+  padding-left: 10%;
+  width: 80%;
+}
+
+body {
+  text-align: center;
+  font-family: "Poly Rounded";
+  font-size: 25px;
+  background-color: #e5e5f7;
+  opacity: 0.8;
+  background-image: radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+.d3 {
+  padding: 2%;
+}
+
+.but2 {
+  background-color: #2E2F30;
+  border-radius: 12px;
+  text-align: center;
+
+  color: #ffffff;
+  font-family: "Calibri";
+  font-size: 30px;
+}
