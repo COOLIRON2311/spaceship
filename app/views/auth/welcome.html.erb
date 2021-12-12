@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<div class="d1">
+  <h1>Welcome aboard!</h1>
+  <img src="/logo.png" class="center" alt="logo">
+</div>
+<body>
+<h2>Your token is:</h2><br>
+    <%= label_tag nil, LoginStatus.current_user.token, :class => "token"%>
+<div class="d3">
+  <a href="/sp.py" download="sp.py" class="but2" type="button">
+    <button class="but2">Get the utility</button>
+  </a>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<div class="d1">
+  <h1>Sign up</h1>
+</div>
+<body>
+<%= form_with do %>
+  <p>
+    <%= label_tag nil, LoginStatus.status, :class => "status"%><br />
+    <%= label_tag :login, "Username" %><br />
+    <%= text_field_tag :login, params[:login] %>
+  </p>
+  <p>
+    <%= label_tag :password %><br />
+    <%= password_field_tag :password1 %><br />
+    <%= password_field_tag :password2 %>
+  </p>
+  <p><%= submit_tag "Sign up", :class => "but"%></p>
+<% end %>
+</body>
+</html>
