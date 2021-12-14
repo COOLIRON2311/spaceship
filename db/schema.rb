@@ -25,9 +25,8 @@ ActiveRecord::Schema.define(version: 2021_12_03_222311) do
 
   create_table "tasks", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "task_hash"
+    t.string "name"
     t.string "result"
-    t.boolean "ready"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_tasks_on_user_id"

@@ -26,7 +26,7 @@ class AuthController < ApplicationController
   end
 
   def sign_up
-    unless [params[:login].nil?]
+    unless params[:login].nil?
       @user = User.find_by_login(params[:login])
       unless @user.nil?
         LoginStatus.status = 'User exists'
