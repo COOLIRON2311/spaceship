@@ -2,24 +2,20 @@ require 'digest'
 require 'login_status'
 
 class AuthController < ApplicationController
-  after_action :clear_status
+  include ApplicationHelper
   include Digest
-
-  def clear_status
-    LoginStatus.clear_status
-  end
 
   def log_in
     if [params[:login], params[:password]].all? { |i| !i.nil? }
       @user = User.find_by_login(params[:login])
       if @user.nil?
-        LoginStatus.status = 'Invalid username'
+        redirect_to auth_log_in_path, notice: 'Invalid username'
       else
         if @user.password == params[:password]
-          LoginStatus.current_user = @user
+          session[:user_id] = @user.id
           redirect_to auth_welcome_path
         else
-          LoginStatus.status = 'Invalid password'
+          redirect_to auth_log_in_path, notice: 'Invalid password'
         end
       end
     end
@@ -29,8 +25,7 @@ class AuthController < ApplicationController
     unless params[:login].nil?
       @user = User.find_by_login(params[:login])
       unless @user.nil?
-        LoginStatus.status = 'User exists'
-        return
+        redirect_to auth_sign_up_path, notice: 'User exists'
       end
     end
     if [params[:login], params[:password1], params[:password2]].all? { |i| !i.nil? }
@@ -41,21 +36,20 @@ class AuthController < ApplicationController
                              :password => params[:password1],
                              :token => MD5.hexdigest(params[:login] + params[:password1]) })
           @user.save!
-          LoginStatus.current_user = @user
+          session[:user_id] = @user.id
           redirect_to auth_welcome_path
         else
-          LoginStatus.status = 'Passwords do not match'
+          redirect_to auth_sign_up_path, notice: 'Passwords do not match'
         end
       else
-        LoginStatus.status = 'User exists'
+        redirect_to auth_sign_up_path, notice: 'User exists'
       end
     end
   end
 
   def welcome
-    if LoginStatus::current_user.nil?
+    if current_user.nil?
       redirect_to root_path
     end
   end
-
 end
