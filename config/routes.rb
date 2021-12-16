@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get 'auth/log_in'
   get 'auth/sign_up'
 
-  post 'task/create', to: 'tasks#create'
+  post 'task/post', to: 'tasks#post'
   get 'task/result', to: 'tasks#result'
 
   get '/stats', to: 'stats#get'

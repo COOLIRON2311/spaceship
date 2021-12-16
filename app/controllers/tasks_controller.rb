@@ -2,7 +2,7 @@ class TasksController < ActionController::API
   # skip_before_action :verify_authenticity_token
   include ActionController::MimeResponds
 
-  def create
+  def post
     @user = User.find_by_token(params['token'])
     unless @user.nil?
       print @user
