@@ -4,7 +4,7 @@
   <h1>Sign up</h1>
 </div>
 <body>
-<%= form_with do %>
+<%= form_tag(auth_sign_up_path) do %>
   <p>
     <%= label_tag nil, flash[:notice], :class => "status"%><br />
     <%= label_tag :login, "Username" %><br />

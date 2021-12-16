@@ -1,15 +1,16 @@
 Rails.application.routes.draw do
-  get 'auth/log_in'
-  get 'auth/sign_up'
-  get 'auth/welcome'
-
   root 'home#index'
 
-  post '/auth/sign_up', to: 'auth#sign_up'
-  post '/auth/log_in', to: 'auth#log_in'
+  post 'auth/sign_up', to: 'auth#sign_up'
+  post 'auth/log_in', to: 'auth#log_in'
+  get 'auth/welcome'
 
-  post '/task/create', to: 'tasks#create'
-  get '/task/result', to: 'tasks#result'
+  get 'home/log_in_page'
+  get 'home/sign_up_page'
+
+
+  post 'task/create', to: 'tasks#create'
+  get 'task/result', to: 'tasks#result'
 
   get '/stats', to: 'stats#get'
 
