@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <div class="d1">
-  <h1>Sign up</h1>
+  <h1>Log in</h1>
 </div>
 <body>
-<%= form_tag(auth_sign_up_path) do %>
+<%= form_tag do %>
   <p>
     <%= label_tag nil, flash[:notice], :class => "status"%><br />
     <%= label_tag :login, "Username" %><br />
-    <%= text_field_tag :login, params[:login] %>
+    <%= text_field_tag :login, params[:login]%>
   </p>
   <p>
     <%= label_tag :password %><br />
-    <%= password_field_tag :password1 %><br />
-    <%= password_field_tag :password2 %>
+    <%= password_field_tag :password %>
   </p>
-  <p><%= submit_tag "Sign up", :class => "but"%></p>
+  <p><%= submit_tag "Log in", :class => "but"%></p>
 <% end %>
 </body>
 </html>
