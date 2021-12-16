@@ -19,7 +19,7 @@ class Util:
             raise LookupError
 
     @staticmethod
-    def select(name: str) -> None:
+    def initialize(name: str) -> None:
         with open('.task', 'w') as f:
             f.write(name)
 
@@ -45,7 +45,7 @@ class Util:
                     tar.add(f.name)
             con = http.client.HTTPConnection(Util.SERVER)
             con.request('POST', '/task/post',
-                        urllib.parse.urlencode({'token': Util.TOKEN, 'name': name, 'tar': data}))
+                        urllib.parse.urlencode({'token': Util.TOKEN, 'name': name, 'tar': data.getvalue()}))
             print(con.getresponse().read().decode('utf8'))
             con.close()
 
@@ -57,7 +57,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description='Online CUDA compiler proxy')
     subparser = parser.add_subparsers(dest='command')
-    select_p = subparser.add_parser('select', help='Select current task')
+    select_p = subparser.add_parser('init', help='Initialise current task')
     post_p = subparser.add_parser(
         'post', help='Send current task for comiplation')
     subparser.add_parser('result', help='Get last posted task result')
@@ -66,8 +66,8 @@ def main() -> None:
     post_p.add_argument('files', nargs='+', type=argparse.FileType('r'))
     args = parser.parse_args()
 
-    if args.command == 'select':
-        Util.select(args.name)
+    if args.command == 'init':
+        Util.initialize(args.name)
 
     elif args.command == 'post':
         Util.post(args.files)
