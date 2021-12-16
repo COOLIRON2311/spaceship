@@ -9,9 +9,9 @@ Rails.application.routes.draw do
   get 'auth/sign_up'
 
   post 'task/post', to: 'tasks#post'
-  get 'task/result', to: 'tasks#result'
+  post 'task/result', to: 'tasks#result'
 
-  get '/stats', to: 'stats#get'
+  post '/stats', to: 'stats#get'
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

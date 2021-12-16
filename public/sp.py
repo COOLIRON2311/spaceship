@@ -22,13 +22,14 @@ class Util:
     def initialize(name: str) -> None:
         with open('.task', 'w') as f:
             f.write(name)
+        print(f'Task {name} initialised')
 
     @staticmethod
     def result() -> None:
         try:
             name = Util.__get_task()
             con = http.client.HTTPConnection(Util.SERVER)
-            con.request('GET', '/task/result',
+            con.request('POST', '/task/result',
                         urllib.parse.urlencode({'token': Util.TOKEN, 'name': name}))
             print(con.getresponse().read().decode('utf8'))
             con.close()
@@ -57,23 +58,26 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description='Online CUDA compiler proxy')
     subparser = parser.add_subparsers(dest='command')
-    select_p = subparser.add_parser('init', help='Initialise current task')
+    init_p = subparser.add_parser('i', help='Initialise current task')
     post_p = subparser.add_parser(
-        'post', help='Send current task for comiplation')
-    subparser.add_parser('result', help='Get last posted task result')
+        'p', help='Post current task for compilation')
+    subparser.add_parser('r', help='Get last posted task result')
 
-    select_p.add_argument('name', type=str)
+    init_p.add_argument('name', type=str)
     post_p.add_argument('files', nargs='+', type=argparse.FileType('r'))
     args = parser.parse_args()
 
-    if args.command == 'init':
+    if args.command == 'i':
         Util.initialize(args.name)
 
-    elif args.command == 'post':
+    elif args.command == 'p':
         Util.post(args.files)
 
-    else:
+    elif args.command == 'r':
         Util.result()
+
+    else:
+        parser.print_help()
 
 
 if __name__ == '__main__':
