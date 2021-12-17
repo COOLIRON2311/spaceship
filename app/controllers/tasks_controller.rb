@@ -15,7 +15,9 @@ class TasksController < ActionController::API
 
   def post
     @user = User.find_by_token(params['token'])
-    unless @user.nil?
+    if @user.nil?
+      reply 'Invalid token'
+    else
       task = Task.where(user_id: @user.id).last
       if task && task.result.nil?
         reply 'You have unfinished tasks' # business
@@ -48,7 +50,9 @@ class TasksController < ActionController::API
   def result
     puts params
     @user = User.find_by_token(params['token'])
-    unless @user.nil?
+    if @user.nil?
+      reply 'Invalid token'
+    else
       task = Task.where(user_id: @user.id).last
       print task
       if task.result.nil?
