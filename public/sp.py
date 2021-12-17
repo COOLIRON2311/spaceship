@@ -3,11 +3,13 @@ import http.client
 import tarfile
 import urllib.parse
 from io import BytesIO, TextIOWrapper
+from os import remove, rename
 from os.path import exists, realpath
 
 
 class Util:
     SERVER = '127.0.0.1:3000'
+    # TOKEN = 'TOKEN GOES HERE'
     TOKEN = 'cc03e747a6afbbcbf8be7668acfebee5'
 
     @staticmethod
@@ -19,9 +21,12 @@ class Util:
             raise LookupError
 
     @staticmethod
-    def authenticate(token):
-        with open(realpath(__file__), 'r+') as f:
-            f.write(f.read().format(token))
+    def authenticate(token: str) -> None:
+        path = realpath(__file__)
+        with open(path, 'r') as r, open(path+'.tmp', 'w') as w:
+            w.write(r.read().replace('TOKEN GOES HERE', token))
+        remove(path)
+        rename(path+'.tmp', path)
 
     @staticmethod
     def initialize(name: str) -> None:
