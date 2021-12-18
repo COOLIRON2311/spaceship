@@ -9,8 +9,7 @@ from os.path import exists, realpath, relpath
 
 class Util:
     SERVER = '127.0.0.1:3000'
-    # TOKEN = 'TOKEN GOES HERE'
-    TOKEN = 'cc03e747a6afbbcbf8be7668acfebee5'
+    TOKEN = 'TOKEN GOES HERE'
 
     @staticmethod
     def path(path: str) -> str:
