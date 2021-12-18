@@ -5,6 +5,24 @@ class TasksController < ActionController::API
   # skip_before_action :verify_authenticity_token
   include ActionController::MimeResponds
 
+  def extract_tar(data, dest)
+    Gem::Package::TarReader.new(data) do |tar|
+      tar.each do |file|
+        out = File.join(dest, file.full_name)
+        if file.directory?
+          FileUtils.mkdir_p(out)
+        else
+          out_dir = File.dirname(out)
+          FileUtils.mkdir_p(out_dir) until File.directory?(out_dir)
+          File.open(out, 'wb') do |f|
+            # puts file.full_name
+            f.print file.read
+          end
+        end
+      end
+    end
+  end
+
   def reply(message)
     respond_to do |format|
       format.html {
@@ -13,7 +31,7 @@ class TasksController < ActionController::API
     end
   end
 
-  def post
+  def create
     @user = User.find_by_token(params['token'])
     if @user.nil?
       reply 'Invalid token'
@@ -33,22 +51,13 @@ class TasksController < ActionController::API
       FileUtils.mkdir_p(dir)
 
       data = StringIO.new(params['tar'])
-
-      Gem::Package::TarReader.new(data) do |tar|
-        tar.each do |file|
-          File.open(File.join(dir, file.full_name), 'wb') do |f|
-            # puts file.full_name
-            f.print file.read
-          end
-        end
-      end
-      File.delete(File.join(dir, '@PaxHeader'))
+      extract_tar(data, dir)
+      CompilerJob.perform_later(@user, task)
       reply 'Task created successfully'
     end
   end
 
   def result
-    puts params
     @user = User.find_by_token(params['token'])
     if @user.nil?
       reply 'Invalid token'
