@@ -2,15 +2,21 @@ import argparse
 import http.client
 import tarfile
 import urllib.parse
-from io import BytesIO, TextIOWrapper
+from io import BytesIO
 from os import remove, rename
-from os.path import exists, realpath
+from os.path import exists, realpath, relpath
 
 
 class Util:
     SERVER = '127.0.0.1:3000'
     # TOKEN = 'TOKEN GOES HERE'
     TOKEN = 'cc03e747a6afbbcbf8be7668acfebee5'
+
+    @staticmethod
+    def path(path: str) -> str:
+        if exists(path):
+            return path
+        raise argparse.ArgumentTypeError(f'{path} is not a valid path')
 
     @staticmethod
     def __get_task() -> str:
@@ -47,13 +53,20 @@ class Util:
             print('You have no active tasks')
 
     @staticmethod
-    def create(files: list[TextIOWrapper]) -> None:
+    def create(files: list[str]) -> None:
+        files = [relpath(i) for i in files]
+
+        if 'Makefile' not in files:
+            print('You must provide a top-level Makefile')
+            return
+
         try:
             name = Util.__get_task()
             data = BytesIO()
             with tarfile.open(fileobj=data, mode='w') as tar:
                 for f in files:
-                    tar.add(f.name)
+                    tar.add(f)
+
             con = http.client.HTTPConnection(Util.SERVER)
             con.request('POST', '/task/create',
                         urllib.parse.urlencode({'token': Util.TOKEN, 'name': name, 'tar': data.getvalue()}))
@@ -66,7 +79,11 @@ class Util:
 
 def main() -> None:
 
-    parser = argparse.ArgumentParser(description='Online CUDA compiler proxy')
+    parser = argparse.ArgumentParser(description='Online CUDA compiler proxy', epilog='''You must also provide a Makefile that compiles and executes your program like this:
+    all:
+        gcc test.c -o test
+        ./test
+    ''', formatter_class=argparse.RawTextHelpFormatter)
     subparser = parser.add_subparsers(dest='command')
     auth_p = subparser.add_parser('auth', help='Authenticate access token')
     init_p = subparser.add_parser('i', help='Initialise current task')
@@ -76,7 +93,7 @@ def main() -> None:
 
     auth_p.add_argument('token', type=str)
     init_p.add_argument('name', type=str)
-    post_p.add_argument('files', nargs='+', type=argparse.FileType('r'))
+    post_p.add_argument('files', nargs='+', type=Util.path)
     args = parser.parse_args()
 
     if args.command == 'auth':
