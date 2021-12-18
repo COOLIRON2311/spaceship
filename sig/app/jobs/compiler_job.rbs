@@ -1,0 +1,3 @@
+class CompilerJob < ApplicationJob
+  def perform: (User user, Task task) -> void
+end

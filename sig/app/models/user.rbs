@@ -1,0 +1,7 @@
+class User < ApplicationRecord
+  include BCrypt
+
+  def password: () -> BCrypt
+
+  def password=: (untyped new_password) -> untyped
+end
