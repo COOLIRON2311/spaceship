@@ -1,24 +1,32 @@
-# README
+# Spaceship
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Spaceship is an online compiler proxy that allows users to run CUDA programs without the need to have an nvidia gpu.
 
-Things you may want to cover:
+### Common usage scenario:
+```
+./sp.py i test
+(Initialize 'test' task)
 
-* Ruby version
+./sp.py s Makefile test.c
+(Send 'test.c' and the Makefile for building and running it to the server)
 
-* System dependencies
+./sp.py r
+(See the results of task compilation and execution)
 
-* Configuration
+```
 
-* Database creation
+### Requirements:
+Client:
+```
+python
+```
 
-* Database initialization
+Server:
+```
+ruby 2.7.5
+rails 6.1.4
+postgresql and pg gem
+```
 
-* How to run the test suite
+To setup a spaceship server you will need to change the domain in `config/application.rb` and `Util.SERVER` variable in `public/sp.py`
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
