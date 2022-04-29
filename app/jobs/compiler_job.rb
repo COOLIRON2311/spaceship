@@ -20,10 +20,10 @@ class CompilerJob < ApplicationJob
     dir = "tmp/#{user.id}_#{task.id}"
     Dir.chdir(dir) do
       stats = resolve_stats_collector
-      result = IO.popen('make').read
-      stats.new(result)
+      result = IO.popen('make 2>&1').read
       task.result = result
       task.save!
+      stats.new(task, result)
     end
     FileUtils.rm_r(dir)
   end

@@ -1,4 +1,4 @@
 class StatsCollector
-  def initialize(output)
+  def initialize(task, output)
   end
 end
