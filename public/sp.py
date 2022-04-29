@@ -1,10 +1,80 @@
 import argparse
 import http.client
 import tarfile
+
 import urllib.parse
 from io import BytesIO
 from os import remove, rename
 from os.path import exists, realpath, relpath
+
+import tkinter as tk
+import tkinter.ttk as ttk
+import pandas as pd
+from matplotlib import pyplot as plt
+
+
+class StatPlotter(tk.Tk):
+    INDEX = 'Date'
+    headers: list[str]
+    df: pd.DataFrame
+    app: ttk.Frame
+    options: ttk.LabelFrame
+    buttons: ttk.Frame
+    ok: ttk.Button
+    cancel: ttk.Button
+    checks: list[ttk.Checkbutton]
+
+    def __init__(self, file: str) -> None:
+        if not file.endswith('.csv'):
+            raise Exception('Not a csv file')
+        super().__init__()
+        self.df = pd.read_csv(file)
+        self.headers = list(self.df)
+        self.app = ttk.Frame(self, padding=(5, 2))
+        self.options = ttk.LabelFrame(self.app, text='Select columns',
+                                      borderwidth=10)
+        self.buttons = ttk.Frame(self.app,
+                                 borderwidth=2, padding=(5, 2))
+        self.ok = ttk.Button(self.buttons, text='OK',
+                             command=self.__plot)
+        self.cancel = ttk.Button(self.buttons, text='Cancel',
+                                 command=self.destroy)
+        self.checks = [ttk.Checkbutton(self.options, text=i, onvalue=True, offvalue=False)
+                       for i in self.headers if i != self.INDEX]
+
+        self.minsize(230, 150)
+        self.title('spaceship')
+        self.resizable(False, False)
+        self.app.pack(fill='both')
+        self.options.pack(side='top', fill='both')
+
+        for i in self.checks:
+            i.state(['selected'])
+            i.pack(anchor='w')
+
+        self.buttons.pack(side='bottom')
+        self.ok.pack(side='left')
+        self.cancel.pack(side='right')
+        self.__center()
+
+    def __plot(self) -> None:
+        self.df[[self.INDEX, *(h for c, h in zip(self.checks,
+                               self.headers) if c.state())]].plot(self.INDEX)
+        # self.destroy()
+        plt.show()
+
+    def __center(self, geometry: str = '') -> None:
+        if geometry:
+            ww, wh, = map(int, geometry.split('x'))
+        else:
+            ww = self.winfo_reqwidth()
+            wh = self.winfo_reqheight()
+            x = self.winfo_screenwidth() // 2 - ww // 2
+            y = self.winfo_screenheight() // 2 - wh // 2
+        if geometry:
+            self.geometry('{}x{}+{}+{}'.format(ww, wh, x, y))
+        else:
+            self.geometry('+{}+{}'.format(x, y))
 
 
 class Util:
@@ -113,3 +183,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+    # StatPlotter('test.csv').mainloop()
