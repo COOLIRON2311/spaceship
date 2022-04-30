@@ -145,6 +145,18 @@ class Util:
         except LookupError:
             print('You have no active tasks')
 
+    @staticmethod
+    def statistics() -> None:
+        try:
+            name = Util.__get_task()
+            con = http.client.HTTPConnection(Util.SERVER)
+            con.request('POST', '/stats',
+                        urllib.parse.urlencode({'token': Util.TOKEN, 'name': name}))
+            print(con.getresponse().read().decode('utf8'))
+            con.close()
+        except LookupError:
+            print('You have no active tasks')
+
 
 def main() -> None:
 
@@ -155,10 +167,11 @@ def main() -> None:
     ''', formatter_class=argparse.RawTextHelpFormatter)
     subparser = parser.add_subparsers(dest='command')
     auth_p = subparser.add_parser('auth', help='Authenticate access token')
-    init_p = subparser.add_parser('i', help='Initialise current task')
+    init_p = subparser.add_parser('init', help='Initialise current task')
     post_p = subparser.add_parser(
-        's', help='Send current task for compilation')
-    subparser.add_parser('r', help='Get last posted task result')
+        'send', help='Send current task for compilation')
+    subparser.add_parser('res', help='Get last posted task result')
+    subparser.add_parser('stat', help='Get last posted task result')
 
     auth_p.add_argument('token', type=str)
     init_p.add_argument('name', type=str)
@@ -168,14 +181,17 @@ def main() -> None:
     if args.command == 'auth':
         Util.authenticate(args.token)
 
-    elif args.command == 'i':
+    elif args.command == 'init':
         Util.initialize(args.name)
 
-    elif args.command == 's':
+    elif args.command == 'send':
         Util.create(args.files)
 
-    elif args.command == 'r':
+    elif args.command == 'res':
         Util.result()
+
+    elif args.command == 'stat':
+        Util.statistics()
 
     else:
         parser.print_help()

@@ -7,7 +7,7 @@ class NvprofCollector < StatsCollector
         break
       end
     end
-    s = Stat.new(:task => task, :percent => percent.to_f, :time => time.to_f, :calls => calls.to_i, :min => min.to_f, :max => max.to_f)
+    s = Stat.new(task: task, percent: percent.to_f, time: time.to_f, calls: calls.to_i, min: min.to_f, max: max.to_f)
     s.save!
   end
 end

@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   post 'task/create', to: 'tasks#create'
   post 'task/result', to: 'tasks#result'
 
-  post '/stats', to: 'stats#get'
+  post 'stats', to: 'stats#get'
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
