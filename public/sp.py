@@ -152,11 +152,16 @@ class Util:
             con = http.client.HTTPConnection(Util.SERVER)
             con.request('POST', '/stats',
                         urllib.parse.urlencode({'token': Util.TOKEN, 'name': name}))
-            print(con.getresponse().read().decode('utf8'))
+            stats = con.getresponse().read().decode('utf8')
             con.close()
+            with open(f'{name}.csv', 'w') as f:
+                f.write(stats)
         except LookupError:
             print('You have no active tasks')
 
+    @staticmethod
+    def plot(file: str) -> None:
+        StatPlotter(file).mainloop()
 
 def main() -> None:
 
@@ -171,11 +176,13 @@ def main() -> None:
     post_p = subparser.add_parser(
         'send', help='Send current task for compilation')
     subparser.add_parser('res', help='Get last posted task result')
-    subparser.add_parser('stat', help='Get last posted task result')
+    subparser.add_parser('stat', help='Download run statistics of active task')
+    stat_p = subparser.add_parser('plot', help='Visualize run statistics stored in a csv file')
 
     auth_p.add_argument('token', type=str)
     init_p.add_argument('name', type=str)
     post_p.add_argument('files', nargs='+', type=Util.path)
+    stat_p.add_argument('file', nargs=1, type=Util.path)
     args = parser.parse_args()
 
     if args.command == 'auth':
@@ -193,10 +200,12 @@ def main() -> None:
     elif args.command == 'stat':
         Util.statistics()
 
+    elif args.command == 'plot':
+        Util.plot(args.file[0])
+
     else:
         parser.print_help()
 
 
 if __name__ == '__main__':
     main()
-    # StatPlotter('test.csv').mainloop()
