@@ -156,6 +156,7 @@ class Util:
             con.close()
             with open(f'{name}.csv', 'w') as f:
                 f.write(stats)
+            print(f'Downloaded statistics for {name}')
         except LookupError:
             print('You have no active tasks')
 
